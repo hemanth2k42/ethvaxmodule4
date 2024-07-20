@@ -1,46 +1,58 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+
+pragma solidity 0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract DegenToken is ERC20, Ownable 
 {
-    constructor() ERC20("Degen", "DGN") Ownable(msg.sender) 
-    {}
 
-    function mint_tokens(address to, uint256 amount) public onlyOwner 
+    struct Item 
+    {
+        string name_of_brands;
+        uint256 cost_of_brands;
+    }
+
+    mapping(uint256 => Item) public items;
+
+    constructor(address initialOwner) ERC20("Degen", "DGN") Ownable(initialOwner)
+    {
+        items[1] = Item("Virat Kohli Autographed Bat NFT", 10000);
+        items[2] = Item("Virat Kohli Limited Edition Jersey NFT", 5000);
+        items[3] = Item("Virat Kohli Memorabilia NFT", 2000);
+        items[4] = Item("Virat Kohli Meet & Greet Coupon", 1000);
+    }
+
+    function mint(address to, uint256 amount) public onlyOwner 
     {
         _mint(to, amount);
     }
-    event TokensRedeemed(address indexed account, uint256 amount);
+
+    function burn(uint256 amount) public 
+    {
+        require(balanceOf(msg.sender) >= amount, "Insufficient balance");
+        _burn(msg.sender, amount);
+    }
     
-    function redeem_tokens(uint256 amount) public 
+    function transferToken(address receiver, uint256 amount) external 
     {
-        require(amount > 0, "Amount must be greater than zero");
-        require(balanceOf(msg.sender) >= amount, "Insufficient balance to redeem");
-        _burn(msg.sender, amount);
-        emit TokensRedeemed(msg.sender, amount);
+        require(balanceOf(msg.sender) >= amount, "Sorry, not enough Degen tokens available");
+        transfer(receiver, amount);
+    }
+        
+    function redeem(uint256 item) external 
+    {
+        Item storage selectedItem = items[item];
+        require(bytes(selectedItem.name_of_brands).length > 0, "Invalid redeem item");
+        require(balanceOf(msg.sender) >= selectedItem.cost_of_brands, "Insufficient balance to redeem");
+
+        _burn(msg.sender, selectedItem.cost_of_brands);
     }
 
-    function burn_tokens(uint256 amount) public 
+    function showStore() external pure returns (string memory) 
     {
-        require(amount > 0, "Amount must be greater than zero");
-        require(balanceOf(msg.sender) >= amount, "Insufficient balance to burn");
-
-        _burn(msg.sender, amount);
+        return "1. Virat Kohli Autographed Bat NFT (10000 tokens) 2. Virat Kohli Limited Edition Jersey NFT (5000 tokens) 3. Virat Kohli Memorabilia NFT (2000 tokens) 4. Virat Kohli Meet & Greet Coupon (1000 tokens)";
     }
-
-    function transfer_Tokens(address to, uint256 amount) public 
-    {
-        require(to != address(0), "Cannot transfer to the zero address");
-        require(amount > 0, "Amount must be greater than zero");
-
-        transfer(to, amount);
-    }
-
-    function getTokenBalance(address account) public view returns (uint256) 
-    {
-        return balanceOf(account);
-    }
+    
 }
