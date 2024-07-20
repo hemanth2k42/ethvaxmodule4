@@ -5,6 +5,7 @@
 
 The `DegenToken` smart contract is an ERC20 token implementation that allows users to mint, burn, transfer, and redeem tokens for exclusive items. The token is named "Degen" with the symbol "DGN". The contract owner can manage the token supply and set up a store where users can redeem tokens for items related to Virat Kohli memorabilia.
 
+
 ## Features
 
 - **ERC20 Standard**: Implements the ERC20 standard for fungible tokens.
@@ -13,6 +14,11 @@ The `DegenToken` smart contract is an ERC20 token implementation that allows use
 - **Burning**: Users can burn their tokens to reduce the supply.
 - **Transfer**: Users can transfer tokens to other addresses.
 - **Redemption**: Users can redeem tokens for exclusive items listed in the store.
+
+## Prerequisites
+MetaMask: Make sure you have MetaMask installed and set up.
+Ether: Ensure you have enough Ether in your MetaMask wallet to cover gas fees.
+Remix IDE: We'll use Remix IDE for deploying the contract.
 
 ## Contract Details
 
@@ -70,9 +76,22 @@ The `DegenToken` smart contract is an ERC20 token implementation that allows use
 
 ## Deployment
 
-To deploy the `DegenToken` contract, use the following constructor parameters:
+- Go to the "Deploy & Run Transactions" tab in Remix.
+- Select "Injected Web3" in the environment dropdown (this will connect to MetaMask).
+- Ensure your MetaMask is connected to the Ethereum network you want to deploy on (e.g., Ethereum Mainnet or a testnet like Ropsten).
+- Select the DegenToken contract from the contract dropdown.
+- Provide the constructor argument (initialOwner address which will be your MetaMask address).
+- Click "Deploy" and confirm the transaction in MetaMask.
 
-- `initialOwner`: The address that will be assigned as the contract owner.
+## Verify Contract on Snowtrace
+- After deploying, copy the contract address from Remix.
+- Go to Snowtrace and search for your contract address.
+- Click on the contract address to view details.
+- Click on "Contract" tab and then "Verify and Publish".
+- Select "Solidity (Single file)" and enter the contract code.
+- Select the compiler version and provide the constructor arguments (in the ABI-encoded format).
+- Click "Verify and Publish".
+
 
 
 ## License
