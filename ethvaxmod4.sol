@@ -4,9 +4,11 @@ pragma solidity 0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract DegenToken is ERC20, Ownable 
 {
+    using Strings for uint256;
 
     struct Item 
     {
@@ -15,6 +17,7 @@ contract DegenToken is ERC20, Ownable
     }
 
     mapping(uint256 => Item) public items;
+    mapping(address => string[]) public playerItems;
 
     constructor(address initialOwner) ERC20("Degen", "DGN") Ownable(initialOwner)
     {
@@ -48,11 +51,18 @@ contract DegenToken is ERC20, Ownable
         require(balanceOf(msg.sender) >= selectedItem.cost_of_brands, "Insufficient balance to redeem");
 
         _burn(msg.sender, selectedItem.cost_of_brands);
+        
+        playerItems[msg.sender].push(selectedItem.name_of_brands);
+        delete items[item];
     }
 
     function showStore() external pure returns (string memory) 
     {
         return "1. Virat Kohli Autographed Bat NFT (10000 tokens) 2. Virat Kohli Limited Edition Jersey NFT (5000 tokens) 3. Virat Kohli Memorabilia NFT (2000 tokens) 4. Virat Kohli Meet & Greet Coupon (1000 tokens)";
     }
-    
+
+    function getPlayerItems(address player) external view returns (string[] memory) 
+    {
+        return playerItems[player];
+    }
 }
